@@ -6,6 +6,7 @@ This package offers a collection of loggers well-suited for machine learning exp
 
 You can download the package via `pip install mloggers`. Dependencies include:
 
+- `aenum`
 - `numpy`
 - `termcolor`
 - `wandb` (for integration with Weights & Biases)
