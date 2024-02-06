@@ -50,6 +50,8 @@ def main(config: DictConfig):
     except Exception as e:
         logger.error({"Exception occurred during training": e})
         results = {}
+
+    # Log the experiment results
     logger(results, mask=[ConsoleLogger])
 ```
 
