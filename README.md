@@ -68,14 +68,16 @@ At this moment, the built-in loggers are:
 The available methods to log messages are:
 
 - `log(message, level)`: logs a message of a given `LogLevel` (`INFO`, `WARN`, `ERROR`, `DEBUG` or a custom level).
-- `info(message, mask)`: wrapper to call `log(message, LogLevel.INFO)`.
-- `warn(message, mask)`: wrapper to call `log(message, LogLevel.WARN)`.
-- `error(message, mask)`: wrapper to call `log(message, LogLevel.ERROR)`.
-- `debug(message, mask)`: wrapper to call `log(message, LogLevel.DEBUG)`.
+- `info(message)`: wrapper to call `log(message, LogLevel.INFO)`.
+- `warn(message)`: wrapper to call `log(message, LogLevel.WARN)`.
+- `error(message)`: wrapper to call `log(message, LogLevel.ERROR)`.
+- `debug(message)`: wrapper to call `log(message, LogLevel.DEBUG)`.
+
+In the case of the `MultiLogger`, the methods above have the additional optional argument `mask`, which can be used to prevent the given message from being propagated through the masked loggers.
 
 ### Masks
 
-Masks are used by the `MultiLogger` to filter loggers which are not supposed to record a given message. At the time of initialization, you can define a default mask to use for all messages for which a mask is not specified when calling `MultiLogger.log(message, level, mask)`. To create a mask, simply pass as argument a list of the class references for the loggers you would like to mask out.
+Masks are used by the `MultiLogger` to filter loggers which are not supposed to record a given message. At the time of initialization, you can define a default mask to use for all messages for which a mask is not specified when calling `MultiLogger.log(message, level, mask)` or the level-specific variants. To create a mask, simply pass as argument a list of the class references for the loggers you would like to mask out.
 
 ### Customized loggers
 
