@@ -1,0 +1,23 @@
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[project]
+name = "mloggers"
+version = "1.0.0"
+authors = [
+    { name = "Sergio Hernandez Gutierrez", email = "contact.sergiohernandez@gmail.com" },
+]
+description = "A collection of loggers well-suited for machine learning experiments."
+readme = "README.md"
+requires-python = ">=3.10"
+classifiers = [
+    "Programming Language :: Python :: 3",
+    "License :: OSI Approved :: MIT License",
+    "Operating System :: OS Independent",
+]
+dependencies = ["numpy", "omegaconf", "termcolor", "wandb"]
+
+[project.urls]
+Homepage = "https://github.com/serhez/mloggers"
+Issues = "https://github.com/serhez/mloggers/issues"
