@@ -5,6 +5,8 @@ from mloggers._log_levels import LogLevel
 
 
 class Logger(ABC):
+    """The abstract class for a logger."""
+
     @abstractmethod
     def log(
         self,
