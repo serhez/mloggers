@@ -1,13 +1,17 @@
-from enum import Enum
+from aenum import Enum, extend_enum
 
-__logger_level_members = {
-    "WARN": "yellow",
-    "ERROR": "red",
-    "DEBUG": "magenta",
-    "INFO": "cyan",
-}
 
-LogLevel = Enum("LogLevel", __logger_level_members)
+class LogLevel(Enum):
+    """
+    The available log levels.
+    Each level is associated with a color.
+    To register a new level use `mloggers.register_level`.
+    """
+
+    WARN = "yellow"
+    ERROR = "red"
+    DEBUG = "magenta"
+    INFO = "cyan"
 
 
 def register_level(level: str, color: str):
@@ -20,8 +24,8 @@ def register_level(level: str, color: str):
     ----------
     `level` -> the level name to register.
     `color` -> the color to use for the level.
+    - It must be a valid color name from the `termcolor` package.
     """
 
     level = level.upper()
-    __logger_level_members.update({level: color})
-    LogLevel[level] = color
+    extend_enum(LogLevel, level, color)
