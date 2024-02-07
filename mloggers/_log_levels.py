@@ -22,8 +22,8 @@ def register_level(level: str, color: str):
 
     ### Parameters
     ----------
-    `level` -> the level name to register.
-    `color` -> the color to use for the level.
+    `level`: the level name to register.
+    `color`: the color to use for the level.
     - It must be a valid color name from the `termcolor` package.
     """
 

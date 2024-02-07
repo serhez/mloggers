@@ -19,7 +19,7 @@ class FileLogger(Logger):
 
         ### Parameters
         ----------
-        `file_path` -> the path to the file to log to.
+        `file_path`: the path to the file to log to.
         - The file will be created if it does not exist. If it does, the logs will be appended to it.
         """
 

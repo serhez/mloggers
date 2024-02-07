@@ -19,10 +19,10 @@ class WandbLogger(Logger):
 
         ### Parameters
         ----------
-        `project` -> the name of the project to log to.
-        `group` -> the name of the group to log to.
-        `experiment` -> the name of the experiment to log to.
-        [optional] `config` -> the configuration of the experiment.
+        `project`: the name of the project to log to.
+        `group`: the name of the group to log to.
+        `experiment`: the name of the experiment to log to.
+        [optional] `config`: the configuration of the experiment.
         """
 
         if config is not None:

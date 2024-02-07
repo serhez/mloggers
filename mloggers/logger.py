@@ -20,18 +20,18 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message` -> the message to log.
+        `message`: the message to log.
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
             - You can provide None dictionary values to mean that the key is a header or title of the message.
-        `level` -> the level of the message (e.g., INFO, WARN, ERROR, DEBUG, etc.).
+        `level`: the level of the message (e.g., INFO, WARN, ERROR, DEBUG, etc.).
         - If None, no level will be printed.
         - If a string is provided, it will be colored in green (when colors are used) and uppercased; otherwise, the color will be the one associated with the `LogLevel` at time of registration.
 
         ### Raises
         ----------
-        `TypeError` -> if the message is not a string, a dictionary or does not implement `__str__()`.
+        `TypeError`: if the message is not a string, a dictionary or does not implement `__str__()`.
         """
 
         if (
@@ -59,7 +59,7 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message` -> the message to log.
+        `message`: the message to log.
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -79,7 +79,7 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message` -> the message to log.
+        `message`: the message to log.
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -99,7 +99,7 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message` -> the message to log.
+        `message`: the message to log.
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -119,7 +119,7 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message` -> the message to log.
+        `message`: the message to log.
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
