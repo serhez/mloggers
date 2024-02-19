@@ -4,7 +4,7 @@ This package offers a collection of loggers well-suited for machine learning exp
 
 ## Getting started
 
-You can download the package via `pip install mloggers`. Dependencies include:
+You can download the package via `pip install mloggers`. Python version $\geq$ 3.10 is required. Dependencies include:
 
 - `aenum`
 - `numpy`
@@ -78,6 +78,18 @@ In the case of the `MultiLogger`, the methods above have the additional optional
 ### Masks
 
 Masks are used by the `MultiLogger` to filter loggers which are not supposed to record a given message. At the time of initialization, you can define a default mask to use for all messages for which a mask is not specified when calling `MultiLogger.log(message, level, mask)` or the level-specific variants. To create a mask, simply pass as argument a list of the class references for the loggers you would like to mask out.
+
+### Progress bars
+
+You can make use of a pre-configured wrapper of the progress bars provided by the package `rich.progress`. The wrapper is provided via the function `mloggers.progress.log_progress`. Example usage:
+
+```python
+import time
+from mloggers.progress import log_progress
+
+for _ in log_progress(range(100)):
+    time.sleep(0.1)
+```
 
 ### Customized loggers
 

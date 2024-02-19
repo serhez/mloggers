@@ -4,7 +4,7 @@ build-backend = "hatchling.build"
 
 [project]
 name = "mloggers"
-version = "1.0.2"
+version = "1.1.0"
 authors = [
     { name = "Sergio Hernandez Gutierrez", email = "contact.sergiohernandez@gmail.com" },
 ]
@@ -16,7 +16,7 @@ classifiers = [
     "License :: OSI Approved :: MIT License",
     "Operating System :: OS Independent",
 ]
-dependencies = ["aenum", "numpy", "omegaconf", "termcolor", "wandb"]
+dependencies = ["aenum", "numpy", "omegaconf", "termcolor", "wandb", "rich"]
 
 [project.urls]
 Homepage = "https://github.com/serhez/mloggers"
