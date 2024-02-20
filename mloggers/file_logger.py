@@ -28,7 +28,7 @@ class FileLogger(Logger):
             with open(file_path, "w") as file:
                 file.write("[]")
 
-        print(f'{colored("[INFO]", "cyan")} Logging to file {file_path}')
+        print(f'{colored("[INFO]", "cyan")} [FileLogger] Logging to file {file_path}')
 
         self._file_path = file_path
 
@@ -50,20 +50,23 @@ class FileLogger(Logger):
             message = str(message)
 
         try:
-            with open(self._file_path) as file:
+            with open(self._file_path, "r") as file:
                 try:
                     logs = json.load(file)
                 except json.decoder.JSONDecodeError:
                     print(
-                        f'{colored("[ERROR]", "red")} Could not read the log file. Logs will not be saved.'
+                        f'{colored("[WARNING]", "yellow")} [FileLogger] Could not read existing logs in the log file, logs will be overriden.'
                     )
+                    logs = []
 
             log = {
                 "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
-                "message": message,
             }
             if level is not None:
-                log["level"] = level.name if isinstance(level, LogLevel) else str(level).upper()
+                log["level"] = (
+                    level.name if isinstance(level, LogLevel) else str(level).upper()
+                )
+            log["message"] = message
             logs.append(log)
 
             with open(self._file_path, "w") as file:
@@ -72,5 +75,5 @@ class FileLogger(Logger):
 
         except Exception as e:
             print(
-                f'{colored("[ERROR]", "red")} Exception thrown while logging to a file: {e}'
+                f'{colored("[ERROR]", "red")} [FileLogger] Exception thrown while logging to a file: {e}'
             )

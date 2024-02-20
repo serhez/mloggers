@@ -52,7 +52,9 @@ class WandbLogger(Logger):
         try:
             wandb.log(log)
         except Exception as e:
-            print(f'{colored("[ERROR]", "red")} Error while logging to wandb: {e}')
+            print(
+                f'{colored("[ERROR]", "red")} [WandbLogger] Error while logging to wandb: {e}'
+            )
 
     def __del__(self):
         """Finishes the connection with W&B."""
