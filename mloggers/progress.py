@@ -10,6 +10,7 @@ from rich.progress import (
 )
 
 
+# TODO: Improve, maybe with live display and support for nested progress bars
 def log_progress(iterable: Union[Iterable, Sequence]):
     """
     Log an iterable or sequence using a progress bar.
@@ -32,6 +33,7 @@ def log_progress(iterable: Union[Iterable, Sequence]):
         TimeElapsedColumn(),
         TextColumn("•"),
         TimeRemainingColumn(),
+        expand=True,
     )
     bar.__enter__()
     return bar.track(iterable)
