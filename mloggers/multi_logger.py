@@ -1,4 +1,4 @@
-from typing import Any, Dict, Optional, Union
+from typing import Any, Dict, List, Optional, Union
 
 from mloggers._log_levels import LogLevel
 from mloggers.logger import Logger
@@ -9,8 +9,8 @@ class MultiLogger(Logger):
 
     def __init__(
         self,
-        loggers: list[Logger],
-        default_mask: list[Logger] = [],
+        loggers: List[Logger],
+        default_mask: List[Logger] = [],
     ):
         """
         Initializes a multi-logger.
@@ -28,7 +28,7 @@ class MultiLogger(Logger):
         self,
         message: Union[str, Dict[str, Any]],
         level: Optional[Union[LogLevel, str]] = None,
-        mask: Optional[list[Logger]] = None,
+        mask: Optional[List[Logger]] = None,
         *args: Any,
         **kwargs: Any,
     ):
@@ -69,7 +69,7 @@ class MultiLogger(Logger):
     def info(
         self,
         message: Union[str, Dict[str, Any]],
-        mask: Optional[list[Logger]] = None,
+        mask: Optional[List[Logger]] = None,
         *args: Any,
         **kwargs: Any,
     ):
@@ -92,7 +92,7 @@ class MultiLogger(Logger):
     def warn(
         self,
         message: Union[str, Dict[str, Any]],
-        mask: Optional[list[Logger]] = None,
+        mask: Optional[List[Logger]] = None,
         *args: Any,
         **kwargs: Any,
     ):
@@ -115,7 +115,7 @@ class MultiLogger(Logger):
     def error(
         self,
         message: Union[str, Dict[str, Any]],
-        mask: Optional[list[Logger]] = None,
+        mask: Optional[List[Logger]] = None,
         *args: Any,
         **kwargs: Any,
     ):
@@ -138,7 +138,7 @@ class MultiLogger(Logger):
     def debug(
         self,
         message: Union[str, Dict[str, Any]],
-        mask: Optional[list[Logger]] = None,
+        mask: Optional[List[Logger]] = None,
         *args: Any,
         **kwargs: Any,
     ):
