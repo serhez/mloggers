@@ -26,7 +26,7 @@ class FileLogger(Logger):
         # Create the file if it does not exist
         if not os.path.exists(file_path):
             with open(file_path, "w") as file:
-                file.write("[]")
+                file.write("")
 
         print(f'{colored("[INFO]", "cyan")} [FileLogger] Logging to file {file_path}')
 
@@ -51,14 +51,31 @@ class FileLogger(Logger):
 
         try:
             with open(self._file_path, "r") as file:
-                try:
-                    logs = json.load(file)
-                except json.decoder.JSONDecodeError:
-                    print(
-                        f'{colored("[WARNING]", "yellow")} [FileLogger] Could not read existing logs in the log file, logs will be overriden.'
-                    )
-                    logs = []
+                existing_content = file.read()
+                if (
+                    existing_content == ""
+                    or existing_content.isspace()
+                    or existing_content == "[]"
+                ):
+                    prev_logs = []
+                else:
+                    try:
+                        file.seek(0)
+                        prev_logs = json.load(file)
+                    except json.decoder.JSONDecodeError:
+                        print(
+                            f'{colored("[WARNING]", "yellow")} [FileLogger] Could not decode existing logs, new logs will not be appended to the file.'
+                        )
+                        return
+        except Exception as e:
+            print(
+                f'{colored("[ERROR]", "red")} [FileLogger] Exception thrown while reading from the logging file: {e}'
+            )
+            return
 
+        new_logs = prev_logs.copy()
+
+        try:
             log = {
                 "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
             }
@@ -67,13 +84,23 @@ class FileLogger(Logger):
                     level.name if isinstance(level, LogLevel) else str(level).upper()
                 )
             log["message"] = message
-            logs.append(log)
+            new_logs.append(log)
 
             with open(self._file_path, "w") as file:
                 file.seek(0)
-                json.dump(logs, file, indent=4)
+                json.dump(new_logs, file, indent=4)
 
         except Exception as e:
             print(
                 f'{colored("[ERROR]", "red")} [FileLogger] Exception thrown while logging to a file: {e}'
             )
+
+            # Rollback the changes
+            try:
+                with open(self._file_path, "w") as file:
+                    file.seek(0)
+                    json.dump(prev_logs, file, indent=4)
+            except Exception as e:
+                print(
+                    f'{colored("[ERROR]", "red")} [FileLogger] Exception thrown while rolling back the changes: {e}'
+                )
