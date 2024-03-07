@@ -25,6 +25,8 @@ class FileLogger(Logger):
 
         # Create the file if it does not exist
         if not os.path.exists(file_path):
+            dir_path = os.path.dirname(file_path)
+            os.makedirs(dir_path)
             with open(file_path, "w") as file:
                 file.write("")
 
