@@ -1,4 +1,4 @@
-from typing import Iterable, Sequence, Union
+from typing import Iterable, Sequence
 
 from rich.progress import (
     BarColumn,
@@ -11,7 +11,7 @@ from rich.progress import (
 
 
 # TODO: Improve, maybe with live display and support for nested progress bars
-def log_progress(iterable: Union[Iterable, Sequence]):
+def log_progress(iterable: Iterable | Sequence):
     """
     Log an iterable or sequence using a progress bar.
     Wraps `rich.progress.Progress.track`.

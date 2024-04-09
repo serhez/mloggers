@@ -6,7 +6,6 @@ from .multi_logger import MultiLogger
 from .wandb_logger import WandbLogger
 
 __all__ = [
-    "LoggerType",
     "ConsoleLogger",
     "FileLogger",
     "Logger",

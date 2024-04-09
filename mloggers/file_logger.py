@@ -1,7 +1,7 @@
 import json
 import os
 from datetime import datetime
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 import numpy as np
 from termcolor import colored
@@ -39,8 +39,8 @@ class FileLogger(Logger):
 
     def log(
         self,
-        message: Union[str, Dict[str, Any]],
-        level: Optional[Union[LogLevel, str]] = None,
+        message: str | dict[str, Any],
+        level: LogLevel | str | None = None,
         *args: Any,
         **kwargs: Any,
     ):
@@ -81,7 +81,7 @@ class FileLogger(Logger):
         new_logs = prev_logs.copy()
 
         try:
-            log = {
+            log: dict[str, Any] = {
                 "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
             }
             if level is not None:

@@ -1,5 +1,5 @@
 from abc import ABC, abstractmethod
-from typing import Any, Callable, Dict, Optional, Union
+from typing import Any, Callable
 
 from mloggers._log_levels import LogLevel
 
@@ -10,8 +10,8 @@ class Logger(ABC):
     @abstractmethod
     def log(
         self,
-        message: Union[str, Dict[str, Any]],
-        level: Optional[Union[LogLevel, str]] = None,
+        message: str | dict[str, Any],
+        level: LogLevel | str | None = None,
         *args: Any,
         **kwargs: Any,
     ):
@@ -50,7 +50,7 @@ class Logger(ABC):
 
     def info(
         self,
-        message: Union[str, Dict[str, Any]],
+        message: str | dict[str, Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -70,7 +70,7 @@ class Logger(ABC):
 
     def warn(
         self,
-        message: Union[str, Dict[str, Any]],
+        message: str | dict[str, Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -90,7 +90,7 @@ class Logger(ABC):
 
     def error(
         self,
-        message: Union[str, Dict[str, Any]],
+        message: str | dict[str, Any],
         *args: Any,
         **kwargs: Any,
     ):
@@ -110,7 +110,7 @@ class Logger(ABC):
 
     def debug(
         self,
-        message: Union[str, Dict[str, Any]],
+        message: str | dict[str, Any],
         *args: Any,
         **kwargs: Any,
     ):

@@ -1,6 +1,6 @@
 import json
 from datetime import datetime
-from typing import Any, Dict, Optional, Union
+from typing import Any
 
 from termcolor import colored
 
@@ -13,8 +13,8 @@ class ConsoleLogger(Logger):
 
     def log(
         self,
-        message: Union[str, Dict[str, Any]],
-        level: Optional[Union[LogLevel, str]] = None,
+        message: str | dict[str, Any],
+        level: LogLevel | str | None = None,
         *args: Any,
         **kwargs: Any,
     ):
@@ -51,7 +51,7 @@ class ConsoleLogger(Logger):
 
                 if isinstance(value, float):
                     print(f"{level_clr}{time} {key}: {value:.5f}")
-                elif isinstance(value, Union[dict, list]):
+                elif isinstance(value, dict | list):
                     value = json.dumps(value, indent=4)
                     print(f"{level_clr}{time} {key}: {value}")
                 elif value is None:  # Used for headers, titles, etc.
