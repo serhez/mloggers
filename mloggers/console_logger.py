@@ -10,6 +10,7 @@ from mloggers.logger import Logger
 
 class ConsoleLogger(Logger):
     """Logs to the console (i.e., standard I/O)."""
+
     def __init__(self, default_level: LogLevel = LogLevel.INFO):
         super().__init__(default_level)
 

@@ -1,7 +1,8 @@
+from typing import Any
 
 from aenum import Enum, extend_enum
 from numpy import inf
-from typing import Dict
+
 
 class LogLevel(Enum):
     """
@@ -17,7 +18,7 @@ class LogLevel(Enum):
     INFO = {"color": "cyan", "level": 0}
 
 
-def register_level(level: str, level_info: Dict):
+def register_level(level: str, level_info: dict[str, Any]):
     """
     Register a customized logger level, which will then be available as a member of `LogLevel`,
     where its `name` is the argument `level` and its `value` is the argument `level_info`.

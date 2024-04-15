@@ -24,7 +24,7 @@ class MultiLogger(Logger):
         """
 
         super().__init__(default_level)
-        
+
         self._loggers = loggers
         self._default_mask = default_mask
 
@@ -132,7 +132,7 @@ class MultiLogger(Logger):
         """
 
         self.log(message, LogLevel.WARN, mask, *args, **kwargs)
-    
+
     # Alias warning to warn
     warning = warn
 
