@@ -16,7 +16,7 @@ class WandbLogger(Logger):
         project: str,
         group: str,
         experiment: str,
-        default_level: LogLevel | int = LogLevel.INFO,
+        default_level: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
         config: DictConfig | None = None,
     ):
         """

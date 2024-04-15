@@ -4,7 +4,7 @@ from aenum import Enum, extend_enum
 from numpy import inf
 
 
-class LogLevel(Enum):
+class LogLevel(Enum):  # type:ignore[reportGeneralTypeIssues]
     """
     The available log levels.
     Each level is associated with a color and an importance level.

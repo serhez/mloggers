@@ -11,7 +11,7 @@ class MultiLogger(Logger):
         self,
         loggers: list[Logger],
         default_mask: list[type[Logger]] = [],
-        default_level: LogLevel | int = LogLevel.INFO,
+        default_level: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
     ):
         """
         Initializes a multi-logger.
@@ -108,7 +108,7 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.INFO, mask, *args, **kwargs)
+        self.log(message, LogLevel.INFO, mask, *args, **kwargs)  # type:ignore[reportArgumentType]
 
     def warn(
         self,
@@ -131,7 +131,7 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.WARN, mask, *args, **kwargs)
+        self.log(message, LogLevel.WARN, mask, *args, **kwargs)  # type:ignore[reportArgumentType]
 
     # Alias warning to warn
     warning = warn
@@ -157,7 +157,7 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.ERROR, mask, *args, **kwargs)
+        self.log(message, LogLevel.ERROR, mask, *args, **kwargs)  # type:ignore[reportArgumentType]
 
     def debug(
         self,
@@ -180,4 +180,4 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.DEBUG, mask, *args, **kwargs)
+        self.log(message, LogLevel.DEBUG, mask, *args, **kwargs)  # type:ignore[reportArgumentType]

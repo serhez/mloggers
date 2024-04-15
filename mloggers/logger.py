@@ -5,13 +5,13 @@ from mloggers._log_levels import LogLevel
 
 # This constant is used to assign an importance level to anything not using the LogLevel enum.
 # It was chosen to be the same as LogLevel.INFO, but it can be changed to any other value.
-DEFAULT_IMPORTANCE = LogLevel.INFO.value["level"]
+DEFAULT_IMPORTANCE = LogLevel.INFO.value["level"]  # type:ignore[reportAttributeAccessIssue]
 
 
 class Logger(ABC):
     """The abstract class for a logger."""
 
-    def __init__(self, default_level: LogLevel | int = LogLevel.INFO):
+    def __init__(self, default_level: LogLevel | int = LogLevel.INFO):  # type:ignore[reportArgumentType]
         """
         Initialize the logger.
 
@@ -107,7 +107,7 @@ class Logger(ABC):
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.INFO, *args, **kwargs)
+        self.log(message, LogLevel.INFO, *args, **kwargs)  # type:ignore[reportArgumentType]
 
     def warn(
         self,
@@ -127,7 +127,7 @@ class Logger(ABC):
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.WARN, *args, **kwargs)
+        self.log(message, LogLevel.WARN, *args, **kwargs)  # type:ignore[reportArgumentType]
 
     # Alias warning to warn
     warning = warn
@@ -150,7 +150,7 @@ class Logger(ABC):
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.ERROR, *args, **kwargs)
+        self.log(message, LogLevel.ERROR, *args, **kwargs)  # type:ignore[reportArgumentType]
 
     def debug(
         self,
@@ -170,4 +170,4 @@ class Logger(ABC):
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.DEBUG, *args, **kwargs)
+        self.log(message, LogLevel.DEBUG, *args, **kwargs)  # type:ignore[reportArgumentType]

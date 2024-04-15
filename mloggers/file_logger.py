@@ -13,7 +13,7 @@ from mloggers.logger import Logger
 class FileLogger(Logger):
     """Logs to a file."""
 
-    def __init__(self, file_path: str, default_level: LogLevel | int = LogLevel.INFO):
+    def __init__(self, file_path: str, default_level: LogLevel | int = LogLevel.INFO):  # type:ignore[reportArgumentType]
         """
         Initializes a file logger.
 
