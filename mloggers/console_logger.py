@@ -10,6 +10,8 @@ from mloggers.logger import Logger
 
 class ConsoleLogger(Logger):
     """Logs to the console (i.e., standard I/O)."""
+    def __init__(self, default_level: LogLevel = LogLevel.INFO):
+        super().__init__(default_level)
 
     def log(
         self,
@@ -18,7 +20,8 @@ class ConsoleLogger(Logger):
         *args: Any,
         **kwargs: Any,
     ):
-        super(ConsoleLogger, self).log(message, level, *args, **kwargs)
+        if not super(ConsoleLogger, self).log(message, level, *args, **kwargs):
+            return
 
         time = "[" + datetime.now().strftime("%H:%M:%S") + "]"
 
@@ -34,7 +37,7 @@ class ConsoleLogger(Logger):
 
             # Color the level string
             if isinstance(level, LogLevel):
-                level_clr = colored(level_str, level.value)
+                level_clr = colored(level_str, level.value["color"])
             else:
                 level_clr = colored(level_str, "green")
 
