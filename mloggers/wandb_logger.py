@@ -16,6 +16,7 @@ class WandbLogger(Logger):
         project: str,
         group: str,
         experiment: str,
+        default_level: LogLevel | int = LogLevel.INFO,
         config: DictConfig | None = None,
     ):
         """
@@ -26,8 +27,11 @@ class WandbLogger(Logger):
         `project`: the name of the project to log to.
         `group`: the name of the group to log to.
         `experiment`: the name of the experiment to log to.
+        `default_level`: the default log level to use.
         [optional] `config`: the configuration of the experiment.
         """
+
+        super().__init__(default_level)
 
         if config is not None:
             config = vars(config)
@@ -40,7 +44,8 @@ class WandbLogger(Logger):
         *args: Any,
         **kwargs: Any,
     ):
-        super(WandbLogger, self).log(message, level, *args, **kwargs)
+        if not super(WandbLogger, self).log(message, level, *args, **kwargs):
+            return
 
         if isinstance(message, dict):
             log = message

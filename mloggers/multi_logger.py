@@ -11,6 +11,7 @@ class MultiLogger(Logger):
         self,
         loggers: list[Logger],
         default_mask: list[type[Logger]] = [],
+        default_level: LogLevel | int = LogLevel.INFO,
     ):
         """
         Initializes a multi-logger.
@@ -19,10 +20,30 @@ class MultiLogger(Logger):
         ----------
         `loggers`: a list of the initialized loggers to use.
         `default_mask`: the default mask to use when logging.
+        `default_level`: the default log level to use.
         """
 
+        super().__init__(default_level)
+        
         self._loggers = loggers
         self._default_mask = default_mask
+
+        for logger in self._loggers:
+            logger.set_level(self._log_level)
+
+    def set_level(self, level: LogLevel | int):
+        """
+        Sets the log level of the multi-logger.
+
+        ### Parameters
+        ----------
+        `level`: the level to set.
+        """
+
+        super(MultiLogger, self).set_level(level)
+
+        for logger in self._loggers:
+            logger.set_level(self._log_level)
 
     def log(
         self,
@@ -111,6 +132,9 @@ class MultiLogger(Logger):
         """
 
         self.log(message, LogLevel.WARN, mask, *args, **kwargs)
+    
+    # Alias warning to warn
+    warning = warn
 
     def error(
         self,

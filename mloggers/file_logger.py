@@ -13,7 +13,7 @@ from mloggers.logger import Logger
 class FileLogger(Logger):
     """Logs to a file."""
 
-    def __init__(self, file_path: str):
+    def __init__(self, file_path: str, default_level: LogLevel | int = LogLevel.INFO):
         """
         Initializes a file logger.
 
@@ -21,13 +21,19 @@ class FileLogger(Logger):
         ----------
         `file_path`: the path to the file to log to.
         - The file will be created if it does not exist. If it does, the logs will be appended to it.
+
+        `default_level`: the default log level to use.
         """
+
+        super().__init__(default_level)
 
         # Create the file if it does not exist
         if not os.path.exists(file_path):
             dir_path = os.path.dirname(file_path)
             try:
-                os.makedirs(dir_path)
+                # If dir path is empty, it means the file is in the current directory
+                if dir_path != "":
+                    os.makedirs(dir_path)
             except FileExistsError:
                 pass
             with open(file_path, "w") as file:
@@ -44,7 +50,8 @@ class FileLogger(Logger):
         *args: Any,
         **kwargs: Any,
     ):
-        super(FileLogger, self).log(message, level, *args, **kwargs)
+        if not super(FileLogger, self).log(message, level, *args, **kwargs):
+            return
 
         # Convert numpy's ndarrays to lists so that they are JSON serializable
         if isinstance(message, dict):

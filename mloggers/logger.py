@@ -3,9 +3,25 @@ from typing import Any, Callable
 
 from mloggers._log_levels import LogLevel
 
+# This constant is used to assign an importance level to anything not using the LogLevel enum.
+# It was chosen to be the same as LogLevel.INFO, but it can be changed to any other value.
+DEFAULT_IMPORTANCE = LogLevel.INFO.value['level']
 
 class Logger(ABC):
     """The abstract class for a logger."""
+    def __init__(self, default_level: LogLevel | int = LogLevel.INFO):
+        """
+        Initialize the logger.
+
+        ### Parameters
+        ----------
+        `log_level`: the default log level to use.
+        - This parameter filters out messages with a lower importance level than the one provided. It can be either a `LogLevel` object or an integer.
+        - When calling the logger with a level not from the `LogLevel` enum, the importance level will be set to 0 (same as `LogLevel.INFO`).
+        - For example, if the log level is set to `LogLevel.INFO`, only messages with a level of `LogLevel.INFO` or higher will be printed (which excludes `LogLevel.DEBUG`).
+        """
+
+        self._log_level = default_level.value['level'] if isinstance(default_level, LogLevel) else default_level
 
     @abstractmethod
     def log(
@@ -42,6 +58,25 @@ class Logger(ABC):
             raise TypeError(
                 f"Expected message to be a string, a dictionary or to have implemented __str__(), but got {type(message)}."
             )
+        
+        # Filter out messages with a lower importance level than the current log level.
+        if isinstance(level, LogLevel) and level.value['level'] < self._log_level:
+            return False
+        elif not isinstance(level, LogLevel) and DEFAULT_IMPORTANCE < self._log_level:
+            return False
+        return True
+
+    def set_level(self, level: LogLevel | int):
+        """
+        Set the log level.
+
+        ### Parameters
+        ----------
+        `level`: the log level to set.
+        - If a string, it must be a valid log level (e.g., INFO, WARN, ERROR, DEBUG, etc.).
+        - If a `LogLevel` object, it will be used as-is.
+        """
+        self._log_level = level.value['level'] if isinstance(level, LogLevel) else level
 
     def _call_impl(self, *args, **kwargs):
         return self.log(*args, **kwargs)
@@ -65,7 +100,7 @@ class Logger(ABC):
             - The dictionary must be JSON serializable.
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
-
+        
         self.log(message, LogLevel.INFO, *args, **kwargs)
 
     def warn(
@@ -87,6 +122,9 @@ class Logger(ABC):
         """
 
         self.log(message, LogLevel.WARN, *args, **kwargs)
+    
+    # Alias warning to warn
+    warning = warn
 
     def error(
         self,
