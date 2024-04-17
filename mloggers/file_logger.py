@@ -45,14 +45,28 @@ class FileLogger(Logger):
 
     def log(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         level: LogLevel | str | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
-        if not super(FileLogger, self).log(message, level, *args, **kwargs):
+        if not super(FileLogger, self).log(*messages, level=level, **kwargs):
             return
 
+        # Handle multiple messages
+        if len(messages) > 1:
+            messages = list(messages)
+            # If the messages are strings, join them into a single string.
+            if all(hasattr(message, "__str__") and callable(getattr(message, "__str__"))
+                   and not isinstance(message, dict) for message in messages):
+                message = " ".join([str(message) for message in messages])
+            # If the messages are dictionaries, log them separately.
+            else:
+                for message in messages:
+                    self.log(message, level=level)
+                return
+        else:
+            message = messages[0]
+        
         # Convert numpy's ndarrays to lists so that they are JSON serializable
         if isinstance(message, dict):
             for key, value in message.items():

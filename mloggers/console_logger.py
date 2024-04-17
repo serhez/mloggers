@@ -16,12 +16,11 @@ class ConsoleLogger(Logger):
 
     def log(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         level: LogLevel | str | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
-        if not super(ConsoleLogger, self).log(message, level, *args, **kwargs):
+        if not super(ConsoleLogger, self).log(*messages, level=level, **kwargs):
             return
 
         time = "[" + datetime.now().strftime("%H:%M:%S") + "]"
@@ -45,10 +44,26 @@ class ConsoleLogger(Logger):
         # The first level of the dictionary is printed as a multiline
         # indented message.
         # The rest of the levels are printed as a single line
-        # pretifyed depending on the type of the value.
-        if isinstance(message, dict):
+        # prettifyed depending on the type of the value.
+
+        # Handle multiple messages
+        if len(messages) > 1:
+            messages = list(messages)
+            # If the messages are strings, join them into a single string.
+            if all(hasattr(message, "__str__") and callable(getattr(message, "__str__"))
+                   and not isinstance(message, dict) for message in messages):
+                messages = " ".join([str(message) for message in messages])
+            # If the messages are dictionaries, log them separately.
+            else:
+                for message in messages:
+                    self.log(message, level=level)
+                return
+        else:
+            messages = messages[0]
+
+        if isinstance(messages, dict):
             first = True
-            for key, value in message.items():
+            for key, value in messages.items():
                 if not first:
                     time = " " * len(time)
                     level_clr = " " * len(level_str)
@@ -65,5 +80,5 @@ class ConsoleLogger(Logger):
 
                 first = False
 
-        elif hasattr(message, "__str__") and callable(getattr(message, "__str__")):
-            print(f"{level_clr}{time} {str(message)}")
+        elif hasattr(messages, "__str__") and callable(getattr(messages, "__str__")):
+            print(f"{level_clr}{time} {str(messages)}")
