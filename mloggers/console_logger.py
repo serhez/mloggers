@@ -50,8 +50,12 @@ class ConsoleLogger(Logger):
         if len(messages) > 1:
             messages = list(messages)
             # If the messages are strings, join them into a single string.
-            if all(hasattr(message, "__str__") and callable(getattr(message, "__str__"))
-                   and not isinstance(message, dict) for message in messages):
+            if all(
+                hasattr(message, "__str__")
+                and callable(getattr(message, "__str__"))
+                and not isinstance(message, dict)
+                for message in messages
+            ):
                 messages = " ".join([str(message) for message in messages])
             # If the messages are dictionaries, log them separately.
             else:
@@ -82,3 +86,4 @@ class ConsoleLogger(Logger):
 
         elif hasattr(messages, "__str__") and callable(getattr(messages, "__str__")):
             print(f"{level_clr}{time} {str(messages)}")
+

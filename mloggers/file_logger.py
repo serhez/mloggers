@@ -56,8 +56,12 @@ class FileLogger(Logger):
         if len(messages) > 1:
             messages = list(messages)
             # If the messages are strings, join them into a single string.
-            if all(hasattr(message, "__str__") and callable(getattr(message, "__str__"))
-                   and not isinstance(message, dict) for message in messages):
+            if all(
+                hasattr(message, "__str__")
+                and callable(getattr(message, "__str__"))
+                and not isinstance(message, dict)
+                for message in messages
+            ):
                 message = " ".join([str(message) for message in messages])
             # If the messages are dictionaries, log them separately.
             else:
@@ -66,7 +70,7 @@ class FileLogger(Logger):
                 return
         else:
             message = messages[0]
-        
+
         # Convert numpy's ndarrays to lists so that they are JSON serializable
         if isinstance(message, dict):
             for key, value in message.items():

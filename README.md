@@ -75,7 +75,7 @@ The available methods to log messages are:
 
 In the case of the `MultiLogger`, the methods above have the additional optional argument `mask`, which can be used to prevent the given message from being propagated through the masked loggers.
 
-All logging functions support multiple arguments, similar to the print function. For example, `logger.info("The value of x is", x)` will log the message `"The value of x is 42"` if `x = 42`.
+All logging functions support multiple arguments, similar to the print function. For example, `logger.info("The value of x is ", x)` will log the message `"The value of x is 42"` if `x = 42`.
 The input messages can also be a series of dictionaries, which will be all logged in separate log entries. If the logger is given both a dictionary and a string, it will fail.
 
 ### Masks
