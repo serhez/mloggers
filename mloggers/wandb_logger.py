@@ -64,6 +64,7 @@ class WandbLogger(Logger):
         if isinstance(message, dict):
             log = message
         else:
+            message = str(message) # This should be safe here as the super should have already checked that the message is a string or has a __str__ method.
             if level is not None:
                 level_str = (
                     level.name if isinstance(level, LogLevel) else str(level).upper()
