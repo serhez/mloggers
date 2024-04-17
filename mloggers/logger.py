@@ -32,9 +32,8 @@ class Logger(ABC):
     @abstractmethod
     def log(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         level: LogLevel | str | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
         """
@@ -42,7 +41,8 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -50,19 +50,30 @@ class Logger(ABC):
         `level`: the level of the message (e.g., INFO, WARN, ERROR, DEBUG, etc.).
         - If None, no level will be printed.
         - If a string is provided, it will be colored in green (when colors are used) and uppercased; otherwise, the color will be the one associated with the `LogLevel` at time of registration.
+        - If multiple messages are provided, they must be either all strings or all dictionaries. Strings will be joined into a single string, while dictionaries will be printed as separate log entries.
 
         ### Raises
         ----------
         `TypeError`: if the message is not a string, a dictionary or does not implement `__str__()`.
+        `TypeError`: if the messages are a mix of strings and dictionaries.
         """
 
-        if (
-            not isinstance(message, dict)
-            and not hasattr(message, "__str__")
-            and not callable(getattr(message, "__str__"))
-        ):
+        # Check if the messages are of the correct type.
+        for message in messages:
+            if (
+                not isinstance(message, dict)
+                and not hasattr(message, "__str__")
+                and not callable(getattr(message, "__str__"))
+            ):
+                raise TypeError(
+                    f"Expected message to be a string, a dictionary or to have implemented __str__(), but got {type(message)}."
+                )
+        
+        # Check if there is both a string and a dictionary in the messages.
+        if any(isinstance(message, dict) for message in messages) and any(
+            not isinstance(message, dict) for message in messages):
             raise TypeError(
-                f"Expected message to be a string, a dictionary or to have implemented __str__(), but got {type(message)}."
+                "Expected all messages to be either strings or dictionaries, but got a mix of both."
             )
 
         # Filter out messages with a lower importance level than the current log level.
@@ -91,8 +102,7 @@ class Logger(ABC):
 
     def info(
         self,
-        message: str | dict[str, Any],
-        *args: Any,
+        *messages: str | dict[str, Any],
         **kwargs: Any,
     ):
         """
@@ -100,19 +110,19 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.INFO, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.INFO, **kwargs)  # type:ignore[reportArgumentType]
 
     def warn(
         self,
-        message: str | dict[str, Any],
-        *args: Any,
+        *messages: str | dict[str, Any],
         **kwargs: Any,
     ):
         """
@@ -120,22 +130,22 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.WARN, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.WARN, **kwargs)  # type:ignore[reportArgumentType]
 
     # Alias warning to warn
     warning = warn
 
     def error(
         self,
-        message: str | dict[str, Any],
-        *args: Any,
+        *messages: str | dict[str, Any],
         **kwargs: Any,
     ):
         """
@@ -143,19 +153,19 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.ERROR, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.ERROR, **kwargs)  # type:ignore[reportArgumentType]
 
     def debug(
         self,
-        message: str | dict[str, Any],
-        *args: Any,
+        *messages: str | dict[str, Any],
         **kwargs: Any,
     ):
         """
@@ -163,11 +173,12 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
             - You can provide None dictionary values to mean that the key is a header or title of the message.
         """
 
-        self.log(message, LogLevel.DEBUG, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.DEBUG, **kwargs)  # type:ignore[reportArgumentType]

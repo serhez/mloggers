@@ -39,17 +39,32 @@ class WandbLogger(Logger):
 
     def log(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         level: LogLevel | str | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
-        if not super(WandbLogger, self).log(message, level, *args, **kwargs):
+        if not super(WandbLogger, self).log(*messages, level=level, **kwargs):
             return
+        
+        # Handle multiple messages
+        if len(messages) > 1:
+            messages = list(messages)
+            # If the messages are strings, join them into a single string.
+            if all(hasattr(message, "__str__") and callable(getattr(message, "__str__"))
+                   and not isinstance(message, dict) for message in messages):
+                message = " ".join([str(message) for message in messages])
+            # If the messages are dictionaries, log them separately.
+            else:
+                for message in messages:
+                    self.log(message, level=level)
+                return
+        else:
+            message = messages[0]
 
         if isinstance(message, dict):
             log = message
         else:
+            message = str(message) # This should be safe here as the super should have already checked that the message is a string or has a __str__ method.
             if level is not None:
                 level_str = (
                     level.name if isinstance(level, LogLevel) else str(level).upper()

@@ -47,10 +47,9 @@ class MultiLogger(Logger):
 
     def log(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         level: LogLevel | str | None = None,
         mask: list[type[Logger]] | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
         """
@@ -58,7 +57,8 @@ class MultiLogger(Logger):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -66,12 +66,12 @@ class MultiLogger(Logger):
         `level`: the level of the message (e.g., INFO, WARN, ERROR, DEBUG, etc.).
         - If None, no level will be printed.
         - If a string is provided, it will be colored in green (when colors are used) and uppercased; otherwise, the color will be the one associated with the `LogLevel` at time of registration.
-        `mask`: a list of logger names to not be used to log this message.
-        - If None, the default mask will be used.
+        - If multiple messages are provided, they must be either all strings or all dictionaries. Strings will be joined into a single string, while dictionaries will be printed as separate log entries.
 
         ### Raises
         ----------
         `TypeError`: if the message is not a string, a dictionary or does not implement `__str__()`.
+        `TypeError`: if the messages are a mix of strings and dictionaries.
         """
 
         # NOTE: No need for checking the validity of the message, as the individual loggers will do that.
@@ -85,13 +85,12 @@ class MultiLogger(Logger):
             for logger in self._loggers
             if not any(isinstance(logger, type) for type in mask)
         ]:
-            logger(message, level, *args, **kwargs)
+            logger(*messages, level=level, **kwargs)
 
     def info(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         mask: list[type[Logger]] | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
         """
@@ -99,7 +98,8 @@ class MultiLogger(Logger):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -108,13 +108,12 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.INFO, mask, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.INFO, mask=mask, **kwargs)  # type:ignore[reportArgumentType]
 
     def warn(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         mask: list[type[Logger]] | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
         """
@@ -122,7 +121,8 @@ class MultiLogger(Logger):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -131,16 +131,15 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.WARN, mask, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.WARN, mask=mask, **kwargs)  # type:ignore[reportArgumentType]
 
     # Alias warning to warn
     warning = warn
 
     def error(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         mask: list[type[Logger]] | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
         """
@@ -148,7 +147,8 @@ class MultiLogger(Logger):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -157,13 +157,12 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.ERROR, mask, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.ERROR, mask=mask, **kwargs)  # type:ignore[reportArgumentType]
 
     def debug(
         self,
-        message: str | dict[str, Any],
+        *messages: str | dict[str, Any],
         mask: list[type[Logger]] | None = None,
-        *args: Any,
         **kwargs: Any,
     ):
         """
@@ -171,7 +170,8 @@ class MultiLogger(Logger):
 
         ### Parameters
         ----------
-        `message`: the message to log.
+        `messages`: the messages to log.
+        - These can be any number of messages, separated by commas. They can be of the following types:
         - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
         - If a dictionary, the message will be logged as a JSON string.
             - The dictionary must be JSON serializable.
@@ -180,4 +180,4 @@ class MultiLogger(Logger):
         - If None, the default mask will be used.
         """
 
-        self.log(message, LogLevel.DEBUG, mask, *args, **kwargs)  # type:ignore[reportArgumentType]
+        self.log(*messages, level=LogLevel.DEBUG, mask=mask, **kwargs)  # type:ignore[reportArgumentType]

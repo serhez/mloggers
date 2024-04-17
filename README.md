@@ -75,9 +75,23 @@ The available methods to log messages are:
 
 In the case of the `MultiLogger`, the methods above have the additional optional argument `mask`, which can be used to prevent the given message from being propagated through the masked loggers.
 
+All logging functions support multiple arguments, similar to the print function. For example, `logger.info("The value of x is", x)` will log the message `"The value of x is 42"` if `x = 42`.
+The input messages can also be a series of dictionaries, which will be all logged in separate log entries. If the logger is given both a dictionary and a string, it will fail.
+
 ### Masks
 
 Masks are used by the `MultiLogger` to filter loggers which are not supposed to record a given message. At the time of initialization, you can define a default mask to use for all messages for which a mask is not specified when calling `MultiLogger.log(message, level, mask)` or the level-specific variants. To create a mask, simply pass as argument a list of the class references for the loggers you would like to mask out.
+
+### Level filtering
+
+Any logger is initialized with a `default_level` argument, which is set to `LogLevel.INFO` by default. `LogLevel` elements have an `importance` attribute, which defines a hierarchy of levels. When a logger is initialized with a given level, it will only log messages with a level of equal or higher importance. For example, if a logger is initialized with `LogLevel.WARN`, it will log messages with levels `WARN` and `ERROR`, but not `INFO` or `DEBUG`.
+
+The importance values for the built-in levels are:
+
+- `DEBUG`: -1
+- `INFO`: 0
+- `WARN`: 1
+- `ERROR`: `np.inf` (as errors should always be logged)
 
 ### Progress bars
 
