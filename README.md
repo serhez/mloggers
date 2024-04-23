@@ -112,3 +112,35 @@ You can extend the base class `Logger` in order to create a custom logger to sui
 ### Customized log levels
 
 You can register new log levels by using `register_level(level, color)`. Once you register a level `"MyLevel"`, you can use it as `logger.log(message, LogLevel.MYLEVEL)`. The method `log` also supports a string as a level, which will be upper-cased and given a default color; the level can also be `None`, which will simply log the message as a stand-alone.
+
+### Optional loggers
+This library also includes a wrapper around the `Logger` class called `OptionalLogger`, which allows you to use a logger which could be `None` without having to check its validity before every use. Hence, instead of this:
+
+```python
+from mloggers import Logger
+
+
+class MyClass:
+    def __init__(self, logger: Logger | None):
+        self._logger = logger
+
+    def my_function(self):
+        if self._logger is not None:
+            self._logger.info("Message")
+```
+
+You can do this:
+
+```python
+from mloggers import Logger, OptionalLogger
+
+
+class MyClass:
+    def __init__(self, logger: Logger | None):
+        self._logger = OptionalLogger(logger)
+
+    def my_function(self):
+        self._logger.info("Message")
+```
+
+If the logger is `None`, nothing will happen (not even an error!).

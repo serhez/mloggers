@@ -94,6 +94,7 @@ class Logger(ABC):
         - If a string, it must be a valid log level (e.g., INFO, WARN, ERROR, DEBUG, etc.).
         - If a `LogLevel` object, it will be used as-is.
         """
+
         self._log_level = level.value["level"] if isinstance(level, LogLevel) else level
 
     def _call_impl(self, *args, **kwargs):
@@ -107,7 +108,7 @@ class Logger(ABC):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.INFO.
+        Wrapper for calling `log` with `level=LogLevel.INFO`.
 
         ### Parameters
         ----------
@@ -127,7 +128,7 @@ class Logger(ABC):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.WARN.
+        Wrapper for calling `log` with `level=LogLevel.WARN`.
 
         ### Parameters
         ----------
@@ -150,7 +151,7 @@ class Logger(ABC):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.ERROR.
+        Wrapper for calling `log` with `level=LogLevel.ERROR`.
 
         ### Parameters
         ----------
@@ -170,7 +171,7 @@ class Logger(ABC):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.DEBUG.
+        Wrapper for calling `log` with `level=LogLevel.DEBUG`.
 
         ### Parameters
         ----------
