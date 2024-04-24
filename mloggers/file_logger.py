@@ -13,7 +13,7 @@ from mloggers.logger import Logger
 class FileLogger(Logger):
     """Logs to a file."""
 
-    def __init__(self, file_path: str, default_level: LogLevel | int = LogLevel.INFO):  # type:ignore[reportArgumentType]
+    def __init__(self, file_path: str, default_priority: LogLevel | int = LogLevel.INFO):  # type:ignore[reportArgumentType]
         """
         Initializes a file logger.
 
@@ -21,11 +21,10 @@ class FileLogger(Logger):
         ----------
         `file_path`: the path to the file to log to.
         - The file will be created if it does not exist. If it does, the logs will be appended to it.
-
-        `default_level`: the default log level to use.
+        `default_priority`: The default log level priority to use.
         """
 
-        super().__init__(default_level)
+        super().__init__(default_priority)
 
         # Create the file if it does not exist
         if not os.path.exists(file_path):

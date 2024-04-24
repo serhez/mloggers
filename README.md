@@ -84,14 +84,14 @@ Masks are used by the `MultiLogger` to filter loggers which are not supposed to 
 
 ### Level filtering
 
-Any logger is initialized with a `default_level` argument, which is set to `LogLevel.INFO` by default. `LogLevel` elements have an `importance` attribute, which defines a hierarchy of levels. When a logger is initialized with a given level, it will only log messages with a level of equal or higher importance. For example, if a logger is initialized with `LogLevel.WARN`, it will log messages with levels `WARN` and `ERROR`, but not `INFO` or `DEBUG`.
+Any logger is initialized with a `default_priority` argument, which is set to `LogLevel.INFO` by default. `LogLevel` elements have an `importance` attribute, which defines a hierarchy of levels. When a logger is initialized with a given level, it will only log messages with a level of equal or higher importance. For example, if a logger is initialized with `LogLevel.WARN`, it will log messages with levels `WARN` and `ERROR`, but not `INFO` or `DEBUG`.
 
 The importance values for the built-in levels are:
 
 - `DEBUG`: -1
 - `INFO`: 0
 - `WARN`: 1
-- `ERROR`: `np.inf` (as errors should always be logged)
+- `ERROR`: `sys.maxsize` (a very large number, as errors should always be logged)
 
 ### Progress bars
 

@@ -1,32 +1,32 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
-from mloggers._log_levels import LogLevel
+from mloggers._log_levels import LogLevel, _log_level_properties
 
 # This constant is used to assign an importance level to anything not using the LogLevel enum.
-# It was chosen to be the same as LogLevel.INFO, but it can be changed to any other value.
-DEFAULT_IMPORTANCE = LogLevel.INFO.value["level"]  # type:ignore[reportAttributeAccessIssue]
+# It was chosen to be the same as `LogLevel.INFO`, but it can be changed to any other value.
+DEFAULT_IMPORTANCE = _log_level_properties[LogLevel.INFO].priority  # type:ignore[reportAttributeAccessIssue]
 
 
 class Logger(ABC):
     """The abstract class for a logger."""
 
-    def __init__(self, default_level: LogLevel | int = LogLevel.INFO):  # type:ignore[reportArgumentType]
+    def __init__(self, default_priority: LogLevel | int = LogLevel.INFO):  # type:ignore[reportArgumentType]
         """
         Initialize the logger.
 
         ### Parameters
         ----------
-        `log_level`: the default log level to use.
+        `log_level`: The default log level priority to use.
         - This parameter filters out messages with a lower importance level than the one provided. It can be either a `LogLevel` object or an integer.
         - When calling the logger with a level not from the `LogLevel` enum, the importance level will be set to 0 (same as `LogLevel.INFO`).
         - For example, if the log level is set to `LogLevel.INFO`, only messages with a level of `LogLevel.INFO` or higher will be printed (which excludes `LogLevel.DEBUG`).
         """
 
-        self._log_level = (
-            default_level.value["level"]
-            if isinstance(default_level, LogLevel)
-            else default_level
+        self._min_priority = (
+            _log_level_properties[default_priority].priority
+            if isinstance(default_priority, LogLevel)
+            else default_priority
         )
 
     @abstractmethod
@@ -77,25 +77,31 @@ class Logger(ABC):
                 "Expected all messages to be either strings or dictionaries, but got a mix of both."
             )
 
-        # Filter out messages with a lower importance level than the current log level.
-        if isinstance(level, LogLevel) and level.value["level"] < self._log_level:
+        # Filter out messages with a lower importance level than the current priority.
+        if (
+            isinstance(level, LogLevel)
+            and _log_level_properties[level].priority < self._min_priority
+        ):
             return False
-        elif isinstance(level, str) and DEFAULT_IMPORTANCE < self._log_level:
+        elif isinstance(level, str) and DEFAULT_IMPORTANCE < self._min_priority:
             return False
         return True
 
-    def set_level(self, level: LogLevel | int):
+    def set_min_priority(self, value: LogLevel | int):
         """
-        Set the log level.
+        Set the minimum log level priority.
 
         ### Parameters
         ----------
-        `level`: the log level to set.
-        - If a string, it must be a valid log level (e.g., INFO, WARN, ERROR, DEBUG, etc.).
-        - If a `LogLevel` object, it will be used as-is.
+        `value`: the log level priority to set.
+        - If a `LogLevel`, the priority of that log level will be considered.
+        - If an `int`, such number will be considered.
         """
 
-        self._log_level = level.value["level"] if isinstance(level, LogLevel) else level
+        if isinstance(value, int):
+            self._min_priority = value
+        else:
+            self._min_priority = _log_level_properties[value].priority
 
     def _call_impl(self, *args, **kwargs):
         return self.log(*args, **kwargs)

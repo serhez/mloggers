@@ -16,7 +16,7 @@ class WandbLogger(Logger):
         project: str,
         group: str,
         experiment: str,
-        default_level: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
+        default_priority: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
         config: DictConfig | None = None,
     ):
         """
@@ -27,11 +27,11 @@ class WandbLogger(Logger):
         `project`: the name of the project to log to.
         `group`: the name of the group to log to.
         `experiment`: the name of the experiment to log to.
-        `default_level`: the default log level to use.
+        `default_priority`: the default log level priority to use.
         [optional] `config`: the configuration of the experiment.
         """
 
-        super().__init__(default_level)
+        super().__init__(default_priority)
 
         if config is not None:
             config = vars(config)

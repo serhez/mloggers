@@ -4,15 +4,15 @@ from typing import Any
 
 from termcolor import colored
 
-from mloggers._log_levels import LogLevel
+from mloggers._log_levels import LogLevel, _log_level_properties
 from mloggers.logger import Logger
 
 
 class ConsoleLogger(Logger):
     """Logs to the console (i.e., standard I/O)."""
 
-    def __init__(self, default_level: LogLevel = LogLevel.INFO):  # type:ignore[reportArgumentType]
-        super().__init__(default_level)
+    def __init__(self, default_priority: LogLevel = LogLevel.INFO):  # type:ignore[reportArgumentType]
+        super().__init__(default_priority)
 
     def log(
         self,
@@ -37,7 +37,7 @@ class ConsoleLogger(Logger):
 
             # Color the level string
             if isinstance(level, LogLevel):
-                level_clr = colored(level_str, level.value["color"])
+                level_clr = colored(level_str, _log_level_properties[level].color)  # type:ignore[reportArgumentType]
             else:
                 level_clr = colored(level_str, "green")
 
@@ -86,4 +86,3 @@ class ConsoleLogger(Logger):
 
         elif hasattr(messages, "__str__") and callable(getattr(messages, "__str__")):
             print(f"{level_clr}{time} {str(messages)}")
-

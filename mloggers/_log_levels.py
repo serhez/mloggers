@@ -1,7 +1,7 @@
-from typing import Any
+import sys
+from dataclasses import dataclass
 
 from aenum import Enum, extend_enum
-from numpy import inf
 
 
 class LogLevel(Enum):  # type:ignore[reportGeneralTypeIssues]
@@ -12,13 +12,29 @@ class LogLevel(Enum):  # type:ignore[reportGeneralTypeIssues]
     To register a new level use `mloggers.register_level`.
     """
 
-    WARN = {"color": "yellow", "level": 1}
-    ERROR = {"color": "red", "level": inf}
-    DEBUG = {"color": "magenta", "level": -1}
-    INFO = {"color": "cyan", "level": 0}
+    @dataclass
+    class Properties:
+        color: str
+        """The color to use when printing the log."""
+
+        priority: int
+        """The importance level of the log."""
+
+    ERROR = "error"
+    WARN = "warn"
+    INFO = "info"
+    DEBUG = "debug"
 
 
-def register_level(level: str, level_info: dict[str, Any]):
+_log_level_properties: dict[str, LogLevel.Properties] = {
+    LogLevel.ERROR: LogLevel.Properties(color="red", priority=sys.maxsize),
+    LogLevel.WARN: LogLevel.Properties(color="yellow", priority=1),
+    LogLevel.INFO: LogLevel.Properties(color="cyan", priority=0),
+    LogLevel.DEBUG: LogLevel.Properties(color="magenta", priority=-1),
+}
+
+
+def register_level(name: str, properties: LogLevel.Properties):
     """
     Register a customized logger level, which will then be available as a member of `LogLevel`,
     where its `name` is the argument `level` and its `value` is the argument `level_info`.
@@ -27,10 +43,8 @@ def register_level(level: str, level_info: dict[str, Any]):
     ### Parameters
     ----------
     `level`: the level name to register.
-    `level_info`: a dictionary with the following
-        - `color`: the color to use when printing the log. (It must be a valid color name from the `termcolor` package.)
-        - `level`: the importance level of the log. (It must be a number or `np.inf`.)
+    `properties`: the properties of the level.
     """
 
-    level = level.upper()
-    extend_enum(LogLevel, level, level_info)
+    extend_enum(LogLevel, name.upper(), name)
+    _log_level_properties[name] = properties

@@ -11,7 +11,7 @@ class MultiLogger(Logger):
         self,
         loggers: list[Logger],
         default_mask: list[type[Logger]] = [],
-        default_level: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
+        default_priority: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
     ):
         """
         Initializes a multi-logger.
@@ -20,30 +20,22 @@ class MultiLogger(Logger):
         ----------
         `loggers`: a list of the initialized loggers to use.
         `default_mask`: the default mask to use when logging.
-        `default_level`: the default log level to use.
+        `default_priority`: The default log level priority to use.
         """
 
-        super().__init__(default_level)
+        super().__init__(default_priority)
 
         self._loggers = loggers
         self._default_mask = default_mask
 
         for logger in self._loggers:
-            logger.set_level(self._log_level)
+            logger.set_min_priority(self._min_priority)
 
-    def set_level(self, level: LogLevel | int):
-        """
-        Sets the log level of the multi-logger.
-
-        ### Parameters
-        ----------
-        `level`: the level to set.
-        """
-
-        super(MultiLogger, self).set_level(level)
+    def set_min_priority(self, level: LogLevel | int):
+        super(MultiLogger, self).set_min_priority(level)
 
         for logger in self._loggers:
-            logger.set_level(self._log_level)
+            logger.set_min_priority(level)
 
     def log(
         self,
@@ -94,7 +86,7 @@ class MultiLogger(Logger):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.INFO.
+        Wrapper for calling `log` with `level=LogLevel.INFO`.
 
         ### Parameters
         ----------
@@ -117,7 +109,7 @@ class MultiLogger(Logger):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.WARN.
+        Wrapper for calling `log` with `level=LogLevel.WARN`.
 
         ### Parameters
         ----------
@@ -143,7 +135,7 @@ class MultiLogger(Logger):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.ERROR.
+        Wrapper for calling `log` with `level=LogLevel.ERROR`.
 
         ### Parameters
         ----------
@@ -166,7 +158,7 @@ class MultiLogger(Logger):
         **kwargs: Any,
     ):
         """
-        Wrapper for calling `log` with level=LogLevel.DEBUG.
+        Wrapper for calling `log` with `level=LogLevel.DEBUG`.
 
         ### Parameters
         ----------
