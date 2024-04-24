@@ -1,5 +1,6 @@
 from typing import Any
 
+import numpy.typing as npt
 import wandb
 from omegaconf import DictConfig
 from termcolor import colored
@@ -39,7 +40,7 @@ class WandbLogger(Logger):
 
     def log(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         level: LogLevel | str | None = None,
         **kwargs: Any,
     ):

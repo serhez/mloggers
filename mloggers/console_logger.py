@@ -2,6 +2,7 @@ import json
 from datetime import datetime
 from typing import Any
 
+import numpy.typing as npt
 from termcolor import colored
 
 from mloggers._log_levels import LogLevel, _log_level_properties
@@ -16,7 +17,7 @@ class ConsoleLogger(Logger):
 
     def log(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         level: LogLevel | str | None = None,
         **kwargs: Any,
     ):

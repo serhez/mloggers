@@ -4,6 +4,7 @@ from datetime import datetime
 from typing import Any
 
 import numpy as np
+import numpy.typing as npt
 from termcolor import colored
 
 from mloggers._log_levels import LogLevel
@@ -13,7 +14,11 @@ from mloggers.logger import Logger
 class FileLogger(Logger):
     """Logs to a file."""
 
-    def __init__(self, file_path: str, default_priority: LogLevel | int = LogLevel.INFO):  # type:ignore[reportArgumentType]
+    def __init__(
+        self,
+        file_path: str,
+        default_priority: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
+    ):
         """
         Initializes a file logger.
 
@@ -44,7 +49,7 @@ class FileLogger(Logger):
 
     def log(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         level: LogLevel | str | None = None,
         **kwargs: Any,
     ):
@@ -71,6 +76,8 @@ class FileLogger(Logger):
             message = messages[0]
 
         # Convert numpy's ndarrays to lists so that they are JSON serializable
+        if isinstance(message, np.ndarray):
+            message = message.tolist()
         if isinstance(message, dict):
             for key, value in message.items():
                 if isinstance(value, np.ndarray):

@@ -1,6 +1,8 @@
 from abc import ABC, abstractmethod
 from typing import Any, Callable
 
+import numpy.typing as npt
+
 from mloggers._log_levels import LogLevel, _log_level_properties
 
 # This constant is used to assign an importance level to anything not using the LogLevel enum.
@@ -17,7 +19,7 @@ class Logger(ABC):
 
         ### Parameters
         ----------
-        `log_level`: The default log level priority to use.
+        `default_priority`: The default log level priority to use.
         - This parameter filters out messages with a lower importance level than the one provided. It can be either a `LogLevel` object or an integer.
         - When calling the logger with a level not from the `LogLevel` enum, the importance level will be set to 0 (same as `LogLevel.INFO`).
         - For example, if the log level is set to `LogLevel.INFO`, only messages with a level of `LogLevel.INFO` or higher will be printed (which excludes `LogLevel.DEBUG`).
@@ -32,7 +34,7 @@ class Logger(ABC):
     @abstractmethod
     def log(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         level: LogLevel | str | None = None,
         **kwargs: Any,
     ):
@@ -44,13 +46,14 @@ class Logger(ABC):
         `messages`: the messages to log.
         - These can be any number of messages, separated by commas. They can be of the following types:
             - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
+            - If a list or numpy array, the message will be logged as a stringified list.
             - If a dictionary, the message will be logged as a JSON string.
                 - The dictionary must be JSON serializable.
                 - You can provide None dictionary values to mean that the key is a header or title of the message.
-            `level`: the level of the message (e.g., INFO, WARN, ERROR, DEBUG, etc.).
-            - If None, no level will be printed.
-            - If a string is provided, it will be colored in green (when colors are used) and uppercased; otherwise, the color will be the one associated with the `LogLevel` at time of registration.
-        - If multiple messages are provided, they must be either all strings or all dictionaries. Strings will be joined into a single string, while dictionaries will be printed as separate log entries.
+        - If multiple messages are provided, they must be either all dictionaries or none of them. Strings, lists and arrays will be joined into a single string, while dictionaries will be printed as separate log entries.
+        `level`: the level of the message (e.g., INFO, WARN, ERROR, DEBUG, etc.).
+        - If None, no level will be printed.
+        - If a string is provided, it will be colored in green (when colors are used) and uppercased; otherwise, the color will be the one associated with the `LogLevel` at time of registration.
 
         ### Raises
         ----------
@@ -110,7 +113,7 @@ class Logger(ABC):
 
     def info(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         **kwargs: Any,
     ):
         """
@@ -120,17 +123,19 @@ class Logger(ABC):
         ----------
         `messages`: the messages to log.
         - These can be any number of messages, separated by commas. They can be of the following types:
-        - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
-        - If a dictionary, the message will be logged as a JSON string.
-            - The dictionary must be JSON serializable.
-            - You can provide None dictionary values to mean that the key is a header or title of the message.
+            - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
+            - If a list or numpy array, the message will be logged as a stringified list.
+            - If a dictionary, the message will be logged as a JSON string.
+                - The dictionary must be JSON serializable.
+                - You can provide None dictionary values to mean that the key is a header or title of the message.
+        - If multiple messages are provided, they must be either all dictionaries or none of them. Strings, lists and arrays will be joined into a single string, while dictionaries will be printed as separate log entries.
         """
 
         self.log(*messages, level=LogLevel.INFO, **kwargs)  # type:ignore[reportArgumentType]
 
     def warn(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         **kwargs: Any,
     ):
         """
@@ -140,10 +145,12 @@ class Logger(ABC):
         ----------
         `messages`: the messages to log.
         - These can be any number of messages, separated by commas. They can be of the following types:
-        - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
-        - If a dictionary, the message will be logged as a JSON string.
-            - The dictionary must be JSON serializable.
-            - You can provide None dictionary values to mean that the key is a header or title of the message.
+            - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
+            - If a list or numpy array, the message will be logged as a stringified list.
+            - If a dictionary, the message will be logged as a JSON string.
+                - The dictionary must be JSON serializable.
+                - You can provide None dictionary values to mean that the key is a header or title of the message.
+        - If multiple messages are provided, they must be either all dictionaries or none of them. Strings, lists and arrays will be joined into a single string, while dictionaries will be printed as separate log entries.
         """
 
         self.log(*messages, level=LogLevel.WARN, **kwargs)  # type:ignore[reportArgumentType]
@@ -153,7 +160,7 @@ class Logger(ABC):
 
     def error(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         **kwargs: Any,
     ):
         """
@@ -163,17 +170,19 @@ class Logger(ABC):
         ----------
         `messages`: the messages to log.
         - These can be any number of messages, separated by commas. They can be of the following types:
-        - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
-        - If a dictionary, the message will be logged as a JSON string.
-            - The dictionary must be JSON serializable.
-            - You can provide None dictionary values to mean that the key is a header or title of the message.
+            - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
+            - If a list or numpy array, the message will be logged as a stringified list.
+            - If a dictionary, the message will be logged as a JSON string.
+                - The dictionary must be JSON serializable.
+                - You can provide None dictionary values to mean that the key is a header or title of the message.
+        - If multiple messages are provided, they must be either all dictionaries or none of them. Strings, lists and arrays will be joined into a single string, while dictionaries will be printed as separate log entries.
         """
 
         self.log(*messages, level=LogLevel.ERROR, **kwargs)  # type:ignore[reportArgumentType]
 
     def debug(
         self,
-        *messages: str | dict[str, Any],
+        *messages: str | dict[str, Any] | list[Any] | npt.NDArray[Any],
         **kwargs: Any,
     ):
         """
@@ -183,10 +192,12 @@ class Logger(ABC):
         ----------
         `messages`: the messages to log.
         - These can be any number of messages, separated by commas. They can be of the following types:
-        - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
-        - If a dictionary, the message will be logged as a JSON string.
-            - The dictionary must be JSON serializable.
-            - You can provide None dictionary values to mean that the key is a header or title of the message.
+            - If a stringifiable object (implements `__str__()`), the message will be logged as-is.
+            - If a list or numpy array, the message will be logged as a stringified list.
+            - If a dictionary, the message will be logged as a JSON string.
+                - The dictionary must be JSON serializable.
+                - You can provide None dictionary values to mean that the key is a header or title of the message.
+        - If multiple messages are provided, they must be either all dictionaries or none of them. Strings, lists and arrays will be joined into a single string, while dictionaries will be printed as separate log entries.
         """
 
         self.log(*messages, level=LogLevel.DEBUG, **kwargs)  # type:ignore[reportArgumentType]
