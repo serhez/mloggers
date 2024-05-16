@@ -77,7 +77,7 @@ class FileLogger(Logger):
 
         # JSON-serialize the message
         try:
-            message = serialize(message)
+            serialized_message = serialize(message)
         except TypeError as e:
             print(
                 f'{colored("[ERROR]", "red")} [FileLogger] Could not convert the message to a JSON serializable format: {e}'
@@ -119,7 +119,7 @@ class FileLogger(Logger):
                 log["level"] = (
                     level.name if isinstance(level, LogLevel) else str(level).upper()
                 )
-            log["message"] = message
+            log["message"] = serialized_message
             new_logs.append(log)
 
             with open(self._file_path, "w") as file:

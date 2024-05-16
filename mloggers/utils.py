@@ -19,12 +19,15 @@ def serialize(message: object) -> object:
     - `TypeError`: If the message cannot be serialized.
     """
 
+    if isinstance(message, list):
+        return [serialize(item) for item in message]
     if isinstance(message, np.ndarray):
-        return message.tolist()
+        return [serialize(item) for item in message.tolist()]
     elif isinstance(message, dict):
+        serialized_message = {}
         for key, value in message.items():
-            message[key] = serialize(value)
-        return message
+            serialized_message[key] = serialize(value)
+        return serialized_message
     elif hasattr(message, "toJSON"):
         return message.toJSON()  # type:ignore[reportAttributeAccessIssue]
     elif hasattr(message, "to_json"):
