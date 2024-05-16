@@ -3,12 +3,12 @@ import os
 from datetime import datetime
 from typing import Any
 
-import numpy as np
 import numpy.typing as npt
 from termcolor import colored
 
 from mloggers._log_levels import LogLevel
 from mloggers.logger import Logger
+from mloggers.utils import serialize
 
 
 class FileLogger(Logger):
@@ -75,16 +75,16 @@ class FileLogger(Logger):
         else:
             message = messages[0]
 
-        # Convert numpy's ndarrays to lists so that they are JSON serializable
-        if isinstance(message, np.ndarray):
-            message = message.tolist()
-        if isinstance(message, dict):
-            for key, value in message.items():
-                if isinstance(value, np.ndarray):
-                    message[key] = value.tolist()
-        elif hasattr(message, "__str__") and callable(getattr(message, "__str__")):
-            message = str(message)
+        # JSON-serialize the message
+        try:
+            message = serialize(message)
+        except TypeError as e:
+            print(
+                f'{colored("[ERROR]", "red")} [FileLogger] Could not convert the message to a JSON serializable format: {e}'
+            )
+            return
 
+        # Read the existing logs
         try:
             with open(self._file_path, "r") as file:
                 existing_content = file.read()
@@ -109,8 +109,8 @@ class FileLogger(Logger):
             )
             return
 
+        # Create the new log and write it to the file
         new_logs = prev_logs.copy()
-
         try:
             log: dict[str, Any] = {
                 "timestamp": datetime.now().strftime("%d/%m/%Y %H:%M:%S"),
