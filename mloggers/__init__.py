@@ -1,3 +1,7 @@
+"""
+A collection of loggers well-suited for machine learning experiments.
+"""
+
 from ._log_levels import LogLevel, register_level
 from .console_logger import ConsoleLogger
 from .file_logger import FileLogger
