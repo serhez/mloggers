@@ -13,7 +13,7 @@ class MultiLogger(Logger):
         self,
         loggers: list[Logger],
         default_mask: list[type[Logger]] = [],
-        default_priority: LogLevel | int = LogLevel.INFO,  # type:ignore[reportArgumentType]
+        default_priority: LogLevel | int | None = None,
     ):
         """
         Initializes a multi-logger.
@@ -23,15 +23,18 @@ class MultiLogger(Logger):
         `loggers`: a list of the initialized loggers to use.
         `default_mask`: the default mask to use when logging.
         `default_priority`: The default log level priority to use.
+        - If `None`, the individual loggers' priorities will not be changed; else, they will all be set to the provided level.
         """
 
-        super().__init__(default_priority)
+        super().__init__(
+            default_priority if default_priority is not None else LogLevel.INFO
+        )
 
         self._loggers = loggers
         self._default_mask = default_mask
 
-        for logger in self._loggers:
-            logger.set_min_priority(self._min_priority)
+        if default_priority is not None:
+            self.set_min_priority(self._min_priority)
 
     def set_min_priority(self, level: LogLevel | int):
         super(MultiLogger, self).set_min_priority(level)
